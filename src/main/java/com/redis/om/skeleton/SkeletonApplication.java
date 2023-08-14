@@ -3,19 +3,19 @@ package com.redis.om.skeleton;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springdoc.core.models.GroupedOpenApi;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.geo.Point;
 
-import com.redis.om.skeleton.models.Address;
-import com.redis.om.skeleton.models.Person;
+import com.redis.om.skeleton.json.Address;
+import com.redis.om.skeleton.json.Person;
 import com.redis.om.skeleton.repositories.PeopleRepository;
+import com.redis.om.skeleton.repositories.ScenariosRepository;
+import com.redis.om.skeleton.repositories.StrategiesRepository;
+import com.redis.om.skeleton.repositories.TradesRepository;
 import com.redis.om.spring.annotations.EnableRedisDocumentRepositories;
 
 import io.swagger.v3.oas.models.OpenAPI;
@@ -24,14 +24,19 @@ import io.swagger.v3.oas.models.info.Info;
 @SpringBootApplication
 @EnableRedisDocumentRepositories(basePackages = "com.redis.om.skeleton.*")
 public class SkeletonApplication {
-  Logger logger = LoggerFactory.getLogger(SkeletonApplication.class);
 
-  @Autowired
+  // @Autowired | not used as Ctor insertion superior
   PeopleRepository repo;
+  StrategiesRepository strategiesRepo;
+  ScenariosRepository scenariosRepo;
+  TradesRepository tradesRepo;
 
   @Bean
-  CommandLineRunner loadTestData(PeopleRepository repo) {
+  CommandLineRunner loadTestData(PeopleRepository repo, StrategiesRepository strategiesRepo,
+      ScenariosRepository scenariosRepo,
+      TradesRepository tradesRepo) {
     return args -> {
+
       repo.deleteAll();
 
       String thorSays = "The Rabbit Is Correct, And Clearly The Smartest One Among You.";
@@ -43,19 +48,14 @@ public class SkeletonApplication {
 
       // Serendipity, 248 Seven Mile Beach Rd, Broken Head NSW 2481, Australia
       Address thorsAddress = Address.of("248", "Seven Mile Beach Rd", "Broken Head", "NSW", "2481", "Australia");
-
       // 11 Commerce Dr, Riverhead, NY 11901
       Address ironmansAddress = Address.of("11", "Commerce Dr", "Riverhead", "NY", "11901", "US");
-
       // 605 W 48th St, New York, NY 10019
       Address blackWidowAddress = Address.of("605", "48th St", "New York", "NY", "10019", "US");
-
       // 20 W 34th St, New York, NY 10001
       Address wandaMaximoffsAddress = Address.of("20", "W 34th St", "New York", "NY", "10001", "US");
-
       // 107 S Beverly Glen Blvd, Los Angeles, CA 90024
       Address gamorasAddress = Address.of("107", "S Beverly Glen Blvd", "Los Angeles", "CA", "90024", "US");
-
       // 11461 Sunset Blvd, Los Angeles, CA 90049
       Address nickFuryAddress = Address.of("11461", "Sunset Blvd", "Los Angeles", "CA", "90049", "US");
 
@@ -71,10 +71,7 @@ public class SkeletonApplication {
           Set.of("skills", "martial_arts"));
       Person nickFury = Person.of("Samuel L.", "Jackson", 73, nickFurySays, new Point(-118.4345534, 34.082615),
           nickFuryAddress, Set.of("planning", "deception", "resources"));
-
       repo.saveAll(List.of(thor, ironman, blackWidow, wandaMaximoff, gamora, nickFury));
-
-      repo.findAll().forEach(p -> logger.info("🦸 Name: {} {}", p.getFirstName(), p.getLastName()));
     };
   }
 

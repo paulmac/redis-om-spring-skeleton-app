@@ -1,0 +1,9 @@
+Overview
+
+Net Profit
+Total Closed Trades
+Percent Profitable
+Profit Factor
+Max Drawdown
+Avg Trade
+Avg No bars in Trades

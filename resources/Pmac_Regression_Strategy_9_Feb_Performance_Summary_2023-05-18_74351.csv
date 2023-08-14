@@ -1,0 +1,7 @@
+-,RunName,TimeFrame,Symbol,Short Name,Net Profit,Gross Profit,Gross Loss,Max Run-up,Max Drawdown,Buy & Hold Return,Sharpe Ratio,Sortino Ratio,Profit Factor,Max Contracts Held,Open PL,Commission Paid,Total Closed Trades,Total Open Trades,Number Winning Trades,Number Losing Trades,Percent Profitable,Avg Trade,Avg Winning Trade,Avg Losing Trade,Ratio Avg Win / Avg Loss,Largest Winning Trade,Largest Losing Trade,Avg # Bars in Trades,Avg # Bars in Winning Trades,Avg # Bars in Losing Trades,Margin Calls
+All EUR,BACK 01,1h,GBPEUR,Pmac_Regression,11742.58,123246.31,111503.73,23529.97,14121.05,3802.47,-0.086,-0.109,1.105,99055,0,838,419,0,265,154,63.25,28.03,465.08,724.05,0.642,2112.97,1551.55,14,12,17,0
+All %,,,,,11.74,123.25,111.5,20.81,13.64,3.8,,,,,0,,,,,,,0.03,0.47,0.73,,2.33,1.65,,,,
+Long EUR,,,,,9092.89,65934.3,56841.41,,,,,,1.16,99055,,420,210,0,135,75,64.29,43.3,488.4,757.89,0.644,2112.97,1551.55,13,11,16,0
+Long %,,,,,9.09,65.93,56.84,,,,,,,,,,,,,,,0.05,0.5,0.77,,2.33,1.65,,,,
+Short EUR,,,,,2649.68,57312,54662.32,,,,,,1.048,97744,,418,209,0,130,79,62.2,12.68,440.86,691.93,0.637,1776.79,1466.66,14,12,18,0
+Short %,,,,,2.65,57.31,54.66,,,,,,,,,,,,,,,0.01,0.44,0.7,,1.83,1.36,,,,

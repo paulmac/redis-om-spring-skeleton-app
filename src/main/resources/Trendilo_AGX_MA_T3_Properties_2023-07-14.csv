@@ -1,0 +1,62 @@
+Title,Value
+Trading range,2022-11-02 05:00 — 2023-07-14 08:00:00
+Backtesting range,2022-10-31 19:00 — 2023-07-14 08:00:00
+Symbol,BITSTAMP:EURUSD
+Timeframe,15 minutes
+Chart type,Candles
+Point Value,1
+Currency,USD
+Tick Size,0.00001
+Precision,Default
+Trendilo,Trendilo
+Std Dev High,Trendilo
+Std Dev Low,Trendilo
+T3 5,close
+Colour Candles to Trade Order state,On
+Close positions at market at the end of each session ?,Off
+Trading Session,0000-2345
+Open  Trading Direction,ALL
+Close Trading Direction,ALL
+Close on Opposite Signal,On
+═════════════ Date Range Filtering,Off
+Start Time,2019-01-01 08:30:00
+End Time,2021-12-30 18:30:00
+═════════════ Set Max number of consecutive loss trades,Off
+Max of consecutive loss trades,15
+═════════════ Set Max number of consecutive won trades,Off
+Max Winning Streak Length,15
+═════════════ Set MAX consecutive days with a loss in a row,Off
+Max of consecutive days with a loss in a row,3
+═════════════ Set Max Total DrawDown,Off
+Max Drawdown (%),10
+═════════════ Set Max Intraday Loss,Off
+Max Intraday Loss (%),3
+═════════════ Limit the number of trades per day,Off
+Number MAX of daily trades,10
+═════════════ Limit the number of trades per week,Off
+Number MAX of weekly trades,50
+═════════════ Stop Type Selection,None
+Stop Loss (%),1
+Trail Stop Loss (%),3
+═════════════ ATR Stop Length,14
+[ATR ONLY] Risk Ratio,1
+════ Take Profit Type Selection,None
+Take Profit (%),3
+══════ ATR Take Profit Length,14
+[ATR ONLY] Reward Ratio,2
+Show Trade Stats,On
+Use Worst Case Estimates,Off
+Lot Size,100
+Show Info?,On
+Initial capital,1000000 USD
+Order size,1 Contracts
+Pyramiding,1 orders
+Commission,0%
+Verify price for limit orders,0 ticks
+Slippage,0 ticks
+Margin for long positions,0%
+Margin for short positions,0%
+Recalculate After order is filled,Off
+Recalculate On every tick,On
+Recalculate On bar close,Off
+Backtesting precision. Use bar magnifier,On

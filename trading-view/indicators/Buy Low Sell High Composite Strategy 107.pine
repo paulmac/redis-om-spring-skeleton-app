@@ -1,0 +1,86 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © PaulMclachlan
+//@version=5
+strategy("BLSH-S", overlay=true, margin_long=100, margin_short=100, calc_on_every_tick = true)
+//indicator(title="Buy Low Sell High Composite", shorttitle="BLSH")
+
+// Create non-repainting security function
+fix_security(_symbol, _res, _src) =>
+    request.security(_symbol, _res, _src[barstate.isrealtime ? 1 : 0], gaps=barmerge.gaps_on, lookahead=barmerge.lookahead_off)
+
+//source = input.source(defval=ohlc4, title="Source")
+//EMA_length = input.int(5, title = "EMA length")
+//tp = input.float(0, title = "Transparency", minval=0, maxval=100)
+//visible = input.bool(defval=false, title = "Show only near-timeframe EMAs")
+// Select which EMAs to plot
+//string EMAs = input.string("Standard", title = "EMAs to show", options = ["Standard", "Fibonacci"])
+
+// normalize values into the range -1 to +1
+normalize(value, minValue, maxValue) =>
+    var_range = maxValue - minValue == 0 ? 0.0001 : maxValue - minValue
+    -1 + (((value - minValue) / var_range) * 2)
+
+atrValue = ta.atr(9)
+priceRange = 2 * atrValue
+
+// RSI
+rsiValue = ta.rsi(close, 14)
+rsiValueNormalized = normalize(rsiValue, 25, 75)
+rsiColor = rsiValueNormalized <= 0 ? color.orange : color.yellow
+
+// Elliot Wave
+emaDiff = ta.ema(close, 5) - ta.ema(close, 35)
+emaDiffNormalized = normalize(emaDiff, -priceRange, priceRange)
+emaColor = emaDiff <= 0 ? color.red : color.lime
+
+// MACD
+fastMovingAverage = ta.ema(close, 12)
+slowMovingAverage = ta.ema(close, 26)
+macd = fastMovingAverage - slowMovingAverage
+macdSignal = ta.sma(macd, 9)
+macdHistogram = macd - macdSignal
+macdNormalized = normalize(macd, -priceRange, priceRange)
+macdSignalNormalized = normalize(macdSignal, -priceRange, priceRange)
+macdHistogramNormalized = normalize(macdHistogram, -priceRange, priceRange)
+
+isMACDAbove = macd >= macdSignal
+crossoverColor = isMACDAbove ? color.lime : color.red
+crossoverValue = ta.cross(macd, macdSignal) ? macdSignalNormalized : na
+
+// MFI
+positiveFlow = math.sum(volume * (ta.change(hlc3) <= 0 ? 0 : hlc3), 14)
+negativeFlow = int(math.sum(volume * (ta.change(hlc3) >= 0 ? 0 : hlc3), 14))
+
+mfiValue = 100.0 - (100.0 / (1.0 + positiveFlow / negativeFlow))
+mfiValueNormalized = normalize(mfiValue, 25, 75)
+
+// Composite
+compositeValue = emaDiffNormalized + rsiValueNormalized + macdHistogramNormalized + mfiValueNormalized
+compositeNormalized = normalize(compositeValue, -4, 4)
+compositeColor = compositeValue <= 0 ? color.red : color.lime
+compositeStyle = plot.style_histogram
+
+// Plots
+//plot(compositeNormalized, title="Composite", color=color.new(compositeColor, 50), style=plot.style_area, linewidth=2)
+plot(macdSignalNormalized, title="MacD Signal", style=plot.style_line, linewidth=2, color=crossoverColor)
+//plot(crossoverValue, title="Crossover", style=plot.style_circles, linewidth=3, color=crossoverColor)
+
+// END indicator(title="Buy Low Sell High Composite", shorttitle="BLSH pmac")
+// START indicator("EMA", overlay=true)
+
+EMA5 = fix_security(syminfo.tickerid,'30', ta.ema(compositeNormalized,5))
+
+plot(series=EMA5, title="30/8", style=plot.style_line, color=color.new(color.yellow, 0), linewidth=2)
+
+// END //
+
+shortSma = ta.sma(close, 14)
+longSma = ta.sma(close, 28)
+
+longCondition = ta.crossover(shortSma, longSma)
+if (longCondition)
+    strategy.entry("My Long Entry Id", strategy.long)
+
+shortCondition = ta.crossunder(ta.sma(close, 14), ta.sma(close, 28))
+if (shortCondition)
+    strategy.entry("My Short Entry Id", strategy.short)

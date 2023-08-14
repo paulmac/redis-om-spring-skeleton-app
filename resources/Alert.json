@@ -1,0 +1,54 @@
+{
+	"strategy": "Trendilo AGX MA T3",
+        "timeFrame": "M15",
+	"direction": "FORWARD",
+	"symbol": "EURUSD",
+	"secType": "FX",
+	"side": "buy",
+	"orderType": "MIDPRICE",
+	"tif": "GTC",
+	"quantity": "10000",
+	"timeStamp": "2023-08-08T08:57:53Z",
+	"price": "1.09902",
+	"close": "1.09902",
+	"open": "1.09826",
+	"high": "1.09902",
+	"low": "1.09824",
+	"time": "2023-08-08T08:57:53Z",
+	"description": "Close entry(s) order Enter Short",
+        "comment": "Exit Short | 1.09902"
+}
+
+{
+	"strategy": "Trendilo AGX MA T3",
+        "timeFrame": "M15",
+	"direction": "FORWARD",
+	"symbol": "{{ticker}}",
+	"secType": "FX",
+	"side": "{{strategy.order.action}}",
+	"orderType": "MIDPRICE",
+	"tif": "GTC",
+	"quantity": "{{strategy.position_size}}",
+	"timeStamp": "{{timenow}}",
+	"price": "{{strategy.order.price}}",
+	"close": "{{close}}",
+	"open": "{{open}}",
+	"high": "{{high}}",
+	"low": "{{low}}",
+	"time": "{{timenow}}",
+	"description": "{{strategy.order.id}}",
+        "comment": "{{strategy.order.comment}}"
+}
+
+    alertStr = '{
+    "orderId" : ' + str.tostring(bar_index) + ',
+    "strategy": "' +strategy + '",
+    "secType": "' + secType + '",
+    "orderType": "' + orderType +'",
+    "price": "' + str.tostring(price) + '",
+    "side": "' + side + '",
+    "ticker":"' + ticker + '",
+    "tif": "' + tif + '",
+    "quantity": ' +str.tostring(quantity) + ',
+    "timestamp": "' + alertTime + '" }'
+    

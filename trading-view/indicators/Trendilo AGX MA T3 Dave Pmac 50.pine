@@ -1,0 +1,227 @@
+/// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Daveatt
+
+// @version=5
+
+
+SystemName = "Trendilo AGX MA T3"
+TradeId = "Trendilo Pmac"
+// These values are used both in the strategy() header and in the script's relevant inputs as default values so they match.
+// Unless these values match in the script's Inputs and the TV backtesting Properties, results between them cannot be compared.
+InitCapital = 100000
+InitPosition = 10000.0
+InitCommission = 0.075
+InitPyramidMax = 0
+CalcOnorderFills = true
+
+strategy(SystemName
+  , overlay = true
+  , calc_on_every_tick=true
+  , use_bar_magnifier=true
+//  , pyramiding=1
+//  , max_labels_count = 500
+//  , max_lines_count = 500
+//  , max_boxes_count = 500
+  , max_bars_back = 500)
+
+// strategy(title=SystemName, shorttitle=SystemName, 
+//  overlay=true, pyramiding=InitPyramidMax, initial_capital=InitCapital, default_qty_type=strategy.percent_of_equity, 
+//  default_qty_value=InitPosition, commission_type=strategy.commission.percent, commission_value=InitCommission, calc_on_order_fills=CalcOnorderFills, 
+//  precision=6, max_lines_count=500, max_labels_count=500)
+
+// ————— You capture the Source of your indicator here
+ext_trendilo_ = input.source(close, title="Trendilo")
+ext_StdDevH_ = input.source(close, title="Std Dev High")
+ext_StdDevL_ = input.source(close, title="Std Dev Low")
+ext_T3_ = input.source(close, title="T3 5")
+
+sma9 = ta.sma(close,9)
+atr14 = ta.atr(14)
+
+// ADX
+adxlen = 14 // input(14, title="ADX Smoothing")
+dilen = 14 // input(14, title="DI Length")
+dirmov(len) =>
+	up = ta.change(high)
+	down = -ta.change(low)
+	plusDM = na(up) ? na : (up > down and up > 0 ? up : 0)
+	minusDM = na(down) ? na : (down > up and down > 0 ? down : 0)
+	truerange = ta.rma(ta.tr, len)
+	plus = fixnan(100 * ta.rma(plusDM, len) / truerange)
+	minus = fixnan(100 * ta.rma(minusDM, len) / truerange)
+	[plus, minus]
+adx(dilen, adxlen) =>
+	[plus, minus] = dirmov(dilen)
+	sum = plus + minus
+	adx = 100 * ta.rma(math.abs(plus - minus) / (sum == 0 ? 1 : sum), adxlen)
+adx_sig = adx(dilen, adxlen)
+adx_ma = ta.sma(adx_sig,5)
+
+// ATR
+atr = ta.atr(5)
+scaledATR = atr * 1.2
+upperATRBand = close + scaledATR
+lowerATRBand = close - scaledATR
+
+// Custom close signal
+//custom_close = input.bool(false, title="Use Custom Close?")
+
+// ————— Bar Coloring
+clrBars = input.bool(true,title="Colour Candles to Trade Order state")
+
+CloseSession = input.bool(false, title="Close positions at market at the end of each session ?")
+Session = input.string(title="Trading Session", defval="0000-2345")
+
+OpenDirection  = input.string(defval="ALL", title="Open  Trading Direction", options=["ALL", "LONG", "SHORT"])
+CloseDirection = input.string(defval="ALL", title="Close Trading Direction", options=["ALL", "LONG", "SHORT"])
+
+closeOnOpposite = input.bool(true, title="Close on Opposite Signal")
+
+// ————— Date range filtering
+DateFilter = input.bool(false, "═════════════ Date Range Filtering")
+
+// ————— Syntax coming from https://www.tradingview.com/blog/en/new-parameter-for-date-input-added-to-pine-21812/
+i_startTime = input.time(defval = timestamp("01 Jan 2019 13:30 +0000"), title = "Start Time")
+i_endTime = input.time(defval = timestamp("30 Dec 2021 23:30 +0000"), title = "End Time")
+
+TradeDateIsAllowed() => DateFilter ? time >= i_startTime and time <= i_endTime : true
+
+// ————— Set the max losing streak length with an input
+setmaxLosingStreak = input.bool(title="═════════════ Set Max number of consecutive loss trades", defval=false)
+maxLosingStreak = input.int(title="Max of consecutive loss trades", defval=15, minval=1)
+
+setmaxWinStreak = input.bool(title="═════════════ Set Max number of consecutive won trades", defval=false)
+maxWinStreak = input.int(title="Max Winning Streak Length",  defval=15, minval=1)
+
+// ————— Set the max consecutive days with a loss
+setmaxLosingDaysStreak = input.bool(title="═════════════ Set MAX consecutive days with a loss in a row", defval=false)
+maxLosingDaysStreak = input.int(title="Max of consecutive days with a loss in a row",  defval=3, minval=1)
+
+setMaxDrawdown = input.bool(title="═════════════ Set Max Total DrawDown",  defval=false)
+// ————— Input for the strategy's maximum drawdown (in % of strategy equity)
+maxPercDd = input.int(title="Max Drawdown (%)",  defval=10, minval=1, maxval=100)
+
+setMaxIntradayLoss = input.bool(title="═════════════ Set Max Intraday Loss", defval=false)
+// ————— Input for the strategy's maximum intraday loss (in % of strategy equity)
+maxIntradayLoss = input.int(title="Max Intraday Loss (%)", defval=3, minval=1, maxval=100)
+
+setNumberDailyTrades = input.bool(title="═════════════ Limit the number of trades per day", defval=false)
+maxDailyTrades = input.int(title="Number MAX of daily trades",  defval=10, minval=1, maxval=100)
+
+setNumberWeeklyTrades = input.bool(title="═════════════ Limit the number of trades per week", defval=false)
+maxWeeklyTrades = input.int(title="Number MAX of weekly trades",  defval=50, minval=1, maxval=100)
+
+// ————— Stop loss management
+StopType = input.string(title="═════════════ Stop Type Selection", defval="None", options=["None", "Percent", "Trailing", "ATR"])
+// ————— Percent
+LossPerc        = input.float(title="Stop Loss (%)", minval=0.0, step=0.5, defval=1) * 0.01
+TrailPerc       = input.float(title="Trail Stop Loss (%)", minval=0.0, step=0.5, defval=3) * 0.01
+// ————— ATR
+atrStopLength   = input.int(title="═════════════ ATR Stop Length", defval=14)
+riskRatioATR    = input.float(defval=1, title="[ATR ONLY] Risk Ratio", step=0.10)
+
+// ————— Take Profit
+TakeProfitType = input.string(title="════ Take Profit Type Selection", defval="None", options=["None", "Percent", "ATR"])
+// ————— Percent
+ProfitPerc = input.float(title="Take Profit (%)", minval=0.0, step=0.5, defval=3) * 0.01
+// ————— ATR
+atrTakeProfitLength   = input.int(title="══════ ATR Take Profit Length", defval=14)
+rewardRatioATR        = input.float(defval=2, title="[ATR ONLY] Reward Ratio",step=0.10)
+
+
+// global variables from PineCoders
+MyGreenRaw = color.new(color.lime,0),             MyGreenMedium = color.new(#00b300,0),       MyGreenSemiDark = color.new(#009900,0),     MyGreenDark = color.new(#006600,0),         MyGreenDarkDark = color.new(#003300,0)
+MyRedRaw = color.new(color.red,0),                MyRedMedium = color.new(#cc0000,0),         MyRedSemiDark = color.new(#990000,0),       MyRedDark = color.new(#330000,0),           MyRedDarkDark = color.new(#330000,0)
+MyFuchsiaRaw = color.new(color.fuchsia,0),        MyFuchsiaMedium = color.new(#c000c0,0),     MyFuchsiaDark = color.new(#800080,0),       MyFuchsiaDarkDark = color.new(#400040,0)
+MyYellowRaw  = color.new(color.yellow,0),         MyYellowMedium  = color.new(#c0c000,0),     MyYellowDark  = color.new(#808000,0),       MyYellowDarkDark  = color.new(#404000,0)
+MyOrangeRaw = color.new(#ffa500,0),               MyOrangeMedium = color.new(#cc8400,0),      MyOrangeDark = color.new(#996300,0)
+MyBlueRaw   = color.new(#4985E7,0),               MyBlueMedium   = color.new(#4985E7,0)
+MyGreenBackGround = color.new(#00FF00,93),        MyRedBackGround = color.new(#FF0000,90)
+
+BIG_NUMBER_COUNT = 1000        
+
+// variables initialisation
+ext_trendilo = nz(ext_trendilo_)
+ext_StdDevH = nz(ext_StdDevH_)
+ext_StdDevL = nz(ext_StdDevL_)
+ext_T3 = nz(ext_T3_)
+
+// =========================
+// ==== RISK MANAGEMENT ====
+// =========================
+
+
+// ===============================
+// ==== ENTRY/EXIT MANAGEMENT ====
+// ===============================
+
+long_adx = adx_sig > adx_ma // Confirmation (Did not improve)
+long_trendilo = ext_trendilo >= ext_StdDevH and ext_trendilo[1] <  ext_StdDevH[1] // and close > ext_T3 Confirmation (Did not improve)
+startLongTrade = long_trendilo and bar_index > 100 and strategy.position_size == 0
+
+short_adx = adx_sig < adx_ma // Confirmation (Did not improve)
+short_trendilo = ext_trendilo <= ext_StdDevL and ext_trendilo[1] >  ext_StdDevL[1] // and close < ext_T3 Confirmation (Did not improve)
+startShortTrade = short_trendilo and bar_index > 100 and strategy.position_size == 0
+
+endLongTrade = ext_trendilo < ext_StdDevH or close < sma9 and strategy.position_size > 0 // not long_trendilo // and close <= sma9 and strategy.position_size == 1  
+
+endShortTrade = ext_trendilo > ext_StdDevL or close > sma9 and strategy.position_size < 0 // and close >= sma9 and strategy.position_size == 1  
+
+// Entry Price
+entry_price = ta.valuewhen(condition=startLongTrade or startShortTrade, source=close, occurrence=0)
+
+// ==============================
+// ==== STOP LOSS MANAGEMENT ====
+// ==============================
+
+// ================================
+// ==== TAKE PROFIT MANAGEMENT ====
+// ================================
+
+// ==============================
+// ==== Session calculations ====
+// ==============================
+
+// ==============================
+// ==== Session calculations ====
+// ==============================
+
+// The BarInSession function returns true when
+// the current bar is inside the session parameter
+BarInSession(sess) => time(timeframe.period, sess) != 0
+in_session = BarInSession(Session)
+okToTradeInSession = CloseSession ? in_session : true
+new_session = in_session and not in_session[1]
+
+bgcolor(color=(CloseSession and BarInSession(Session)[1]) ? color.new(color.green, 85) : na,
+ title="Trading Session")
+
+// =====================
+// ==== Orders Part ====
+// =====================
+
+plot(ext_trendilo, "Trendilo Signal", ext_trendilo > 0 ? MyOrangeRaw : MyFuchsiaRaw, 2, display=display.data_window)
+plot(ext_StdDevH, "Std Dev High", color.maroon, 2, display=display.data_window)
+plot(ext_StdDevL, "Std Dev Low", color.maroon, 2, display=display.data_window)
+plot(ext_T3, "T3 5", color.red, 2, display=display.data_window)
+plot(sma9, "SMA 9", color.purple, 2, display=display.data_window)
+plot(atr14, "ATR 9", color.red, 2, display=display.data_window)
+plot(adx_sig, "ADX", color=color.red, display=display.data_window)
+plot(adx_ma, "ADX MA5", color=color.blue, display=display.data_window)
+plot(strategy.position_size, "Position Size", color.blue, 2, display=display.data_window)
+
+plot(upperATRBand, title="Upper ATR Band", color=color.rgb(0, 255, 0, 50), linewidth=2)
+plot(lowerATRBand, title="Lower ATR Band", color=color.rgb(255, 0, 0, 50), linewidth=2)
+// ==================
+// ==== Strategy ====
+// ================== 
+
+// For LONG make stop bottom of the bar, as it is essentially a breakout trade for Backtest
+if startLongTrade
+    strategy.entry("Enter Long", strategy.long, 10000, comment="Long | " + str.tostring(close), stop=lowerATRBand)
+if endLongTrade
+    strategy.close("Enter Long", "Exit Long | " + str.tostring(close))
+if startShortTrade
+    strategy.entry("Enter Short", strategy.short, 10000, comment="Short | " + str.tostring(close), stop=upperATRBand)
+if endShortTrade
+    strategy.close("Enter Short", "Exit Short | " + str.tostring(close))

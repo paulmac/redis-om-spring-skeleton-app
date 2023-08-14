@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.redis.om.skeleton.models.Person;
+import com.redis.om.skeleton.json.Person;
 import com.redis.om.skeleton.services.PeopleService;
 
 @RestController
@@ -42,7 +42,7 @@ public class PeopleControllerV2 {
     return service.findByHomeLoc(new Point(lon, lat), new Distance(distance, Metrics.MILES));
   }
 
-  @GetMapping("statement/{q}")
+  @GetMapping("statement")
   Iterable<Person> byPersonalStatement(@PathVariable("q") String q) {
     return service.searchByPersonalStatement(q);
   }

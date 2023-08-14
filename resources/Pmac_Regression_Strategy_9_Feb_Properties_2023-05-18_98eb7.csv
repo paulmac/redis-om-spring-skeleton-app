@@ -1,0 +1,38 @@
+Title,Value
+Trading range,2010-01-05 13:00 — 2023-05-17 17:00
+Backtesting range,2009-12-31 17:00 — 2023-05-17 17:00
+Symbol,FX_IDC:GBPEUR
+Timeframe,4 hours
+Chart type,Candles
+Point Value,1
+Currency,EUR
+Tick Size,0.0001
+Precision,Default
+Start Filter,2010-01-02 08:30
+End Filter,2099-01-01 19:30
+MA1 Timeframe,D
+MA2 Timeframe,120
+len,5
+bigBar,0.007
+percent,0.9
+length,5
+Multiplier,1.3
+Source,close
+Use Exponential MA,On
+Bands Style,Average True Range
+ATR Length,10
+Inhibit Buying,Off
+Inhibit Selling,Off
+Slope Limit,0.002
+Initial capital,100000 EUR
+Order size,100% of equity
+Pyramiding,1 orders
+Commission,1 EUR per order
+Verify price for limit orders,0 ticks
+Slippage,0 ticks
+Margin for long positions,0%
+Margin for short positions,0%
+Recalculate After order is filled,Off
+Recalculate On every tick,On
+Recalculate On bar close,On
+Backtesting precision. Use bar magnifier,On

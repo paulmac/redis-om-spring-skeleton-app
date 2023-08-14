@@ -1,0 +1,7 @@
+,Net Profit,Gross Profit,Gross Loss,Max Run-up,Max Drawdown,Buy & Hold Return,Sharpe Ratio,Sortino Ratio,Profit Factor,Max Contracts Held,Open PL,Commission Paid,Total Closed Trades,Total Open Trades,Number Winning Trades,Number Losing Trades,Percent Profitable,Avg Trade,Avg Winning Trade,Avg Losing Trade,Ratio Avg Win / Avg Loss,Largest Winning Trade,Largest Losing Trade,Avg # Bars in Trades,Avg # Bars in Winning Trades,Avg # Bars in Losing Trades,Margin Calls
+All USD,352.7,4585.1,4232.4,834.5,506.1,132947.74,-8.151,-0.993,1.083,10000,0,0,1033,0,383,638,37.08,0.34,11.97,6.63,1.805,231.6,95.1,6,9,4,0
+All %,0.04,0.46,0.42,0.08,0.05,13.29,,,,,0,,,,,,,0,0.11,0.06,,2.15,0.87,,,,
+Long USD,275,2457.3,2182.3,,,,,,1.126,10000,,0,535,0,205,322,38.32,0.51,11.99,6.78,1.769,87.3,95.1,6,9,4,0
+Long %,0.03,0.25,0.22,,,,,,,,,,,,,,,0.01,0.11,0.06,,0.89,0.87,,,,
+Short USD,77.7,2127.8,2050.1,,,,,,1.038,10000,,0,498,0,178,316,35.74,0.16,11.95,6.49,1.843,231.6,50.3,6,9,4,0
+Short %,0.01,0.21,0.21,,,,,,,,,,,,,,,0,0.11,0.06,,2.15,0.49,,,,

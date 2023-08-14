@@ -1,0 +1,28 @@
+,All EUR,All %,Long EUR,Long %,Short EUR,Short %
+Net Profit,11742.58,11.74,9092.89,9.09,2649.68,2.65
+Gross Profit,123246.31,123.25,65934.30,65.93,57312.00,57.31
+Gross Loss,111503.73,111.5,56841.41,56.84,54662.32,54.66
+Max Run-up,23529.97,20.81,,,,
+Max Drawdown,14121.05,13.64,,,,
+Buy & Hold Return,3802.47,3.8,,,,
+Sharpe Ratio,-0.086,,,,,
+Sortino Ratio,-0.109,,,,,
+Profit Factor,1.105,,1.16,,1.048,
+Max Contracts Held,99055,,99055,,97744,
+Open PL,0,0,,,,
+Commission Paid,838.00,,420.00,,418.00,
+Total Closed Trades,419,,210,,209,
+Total Open Trades,0,,0,,0,
+Number Winning Trades,265,,135,,130,
+Number Losing Trades,154,,75,,79,
+Percent Profitable,63.25,,64.29,,62.2,
+Avg Trade,28.03,0.03,43.30,0.05,12.68,0.01
+Avg Winning Trade,465.08,0.47,488.40,0.5,440.86,0.44
+Avg Losing Trade,724.05,0.73,757.89,0.77,691.93,0.7
+Ratio Avg Win / Avg Loss,0.642,,0.644,,0.637,
+Largest Winning Trade,2112.97,2.33,2112.97,2.33,1776.79,1.83
+Largest Losing Trade,1551.55,1.65,1551.55,1.65,1466.66,1.36
+Avg # Bars in Trades,14,,13,,14,
+Avg # Bars in Winning Trades,12,,11,,12,
+Avg # Bars in Losing Trades,17,,16,,18,
+Margin Calls,0,,0,,0,

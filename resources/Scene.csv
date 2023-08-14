@@ -1,0 +1,5 @@
+,Run Name,TimeFrame,Symbol,Short Name
+All USD,BACK 01,15m,EURUSD,Trendilo
+All %,BACK 02,1h,GBPUSD,Trendilo
+Long USD,FORWARD 01,4h,EURUSD,Trendilo
+Long %,BACK 01,1D,GBPUSD,Trendilo

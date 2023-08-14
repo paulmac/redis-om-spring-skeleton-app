@@ -7,8 +7,8 @@ import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 
-import com.redis.om.skeleton.models.Person;
-import com.redis.om.skeleton.models.Person$;
+import com.redis.om.skeleton.json.Person;
+import com.redis.om.skeleton.json.Person$;
 import com.redis.om.spring.search.stream.EntityStream;
 
 import redis.clients.jedis.search.aggr.SortedField.SortOrder;
