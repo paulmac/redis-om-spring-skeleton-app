@@ -14,9 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.ib.client.Types;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import com.redis.om.skeleton.json.ContractProperties;
 import com.redis.om.skeleton.json.Scenario;
 import com.redis.om.skeleton.json.Strategy;
 import com.redis.om.skeleton.repositories.ScenariosRepository;
@@ -102,7 +104,8 @@ public class StrategiesService {
             Scenario trendiloForward = new Scenario();
             trendiloForward.setDirection(Scenario.Direction.FORWARD);
             trendiloForward.setTimeFrame(Scenario.TimeFrame.M15);
-            trendiloForward.setSecType("FX");
+            trendiloForward.setSecType(Types.SecType.CFD);
+            trendiloForward.setConId(ContractProperties.eurCfd);
             trendiloForward.setCurrency("USD");
             trendiloForward.setNarrative(scenarioForwardNarrative);
             trendiloForward.setLongName(trendiloLongName);
@@ -112,8 +115,9 @@ public class StrategiesService {
             Scenario pmacRegressionForward = new Scenario();
             pmacRegressionForward.setDirection(Scenario.Direction.FORWARD);
             pmacRegressionForward.setTimeFrame(Scenario.TimeFrame.H4);
-            pmacRegressionForward.setSecType("FX");
-            pmacRegressionForward.setCurrency("EUR");
+            pmacRegressionForward.setSecType(Types.SecType.CFD);
+            pmacRegressionForward.setConId(ContractProperties.eurCfd);
+            pmacRegressionForward.setCurrency("USD");
             pmacRegressionForward.setNarrative(scenarioForwardNarrative);
             pmacRegressionForward.setLongName(pmacRegressionLongName);
             Strategy pmacRegression = Strategy.of(pmacRegressionLongName, pmacRegressionShortName, "SimonMyFxbook",
@@ -160,15 +164,6 @@ public class StrategiesService {
             Path path = Paths.get(ClassLoader.getSystemResource(summaryFile).toURI());
             try (Reader reader = Files.newBufferedReader(path)) {
 
-                // FOR TESTING
-                // CsvToBean<Scene> c = new CsvToBeanBuilder<Scene>(reader)
-                // .withType(Scene.class)
-                // .build();
-                // List<Scene> l = c.parse();
-                // Iterator<Scene> i = l.iterator();
-                // while (i.hasNext())
-                // log.info("nb : " + i.next().toString());
-
                 CsvToBean<Scenario> cb = new CsvToBeanBuilder<Scenario>(reader)
                         .withType(Scenario.class)
                         .build();
@@ -184,6 +179,7 @@ public class StrategiesService {
                             log.info("Strategy {" + s.getLongName() + "}, backs.size=" + s.backs.size());
                             if (s.backs.isEmpty()) {
                                 scenario.setSymbol(symbol);
+                                scenario.setConId(ContractProperties.eurCfd);
                                 scenario.setNarrative("My First Backtest");
                                 scenario.setNetProfitPercentage(percentages.getNetProfit());
                                 scenario.setGrossLossPercentage(percentages.getGrossLoss());

@@ -3,12 +3,14 @@ package com.redis.om.skeleton.json;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.ib.client.Types;
 import com.opencsv.bean.CsvBindByName;
 import com.redis.om.spring.annotations.Document;
 import com.redis.om.spring.annotations.Indexed;
@@ -59,19 +61,6 @@ public class Scenario {
             this.d = d;
         }
     }
-    // public Scenario(String shortName, String symbol, String timeFrame, String
-    // runName) {
-    // this.shortName = shortName;
-    // this.symbol = symbol;
-    // this.timeFrame = timeFrame;
-    // this.runName = runName;
-    // }
-
-    // @NonNull
-    // @Indexed
-    // // @CsvBindByName(column = "Short Name")
-    // private String longName = "Long Name"; // defines the Scenario instance
-    // together with symbol, timeframe, runName
 
     @NonNull
     @Indexed
@@ -82,7 +71,7 @@ public class Scenario {
     @NonNull
     @Indexed
     @CsvBindByName(column = "Symbol")
-    private String symbol = "EURUSD"; // Symbol,FX_IDC:GBPEUR
+    private String symbol = "EUR"; // Symbol,FX_IDC:GBPEUR
 
     @NonNull
     @Indexed
@@ -100,11 +89,15 @@ public class Scenario {
     // start and stop a run
 
     @NonNull
+    private Types.SecType secType = Types.SecType.CFD; // IBKR "CFD"
+
+    @NonNull
+    private Integer conId = Integer.valueOf(143916318); // EUR.USD CFD
+
+    @NonNull
     public Trade current = new Trade(); // check trade.status to determine whether open or not
 
-    public LinkedList<String> trades = new LinkedList<>(); // List of IDs sufficient for now
-
-    private String secType; // e.g "FX"
+    public List<String> trades = new LinkedList<>(); // List of IDs sufficient for now
 
     private Instant start = Instant.now(); // Trading range,2010-01-05 13:00 — 2023-05-17 17:00
 
@@ -114,7 +107,7 @@ public class Scenario {
 
     private int pointValue; // 1
 
-    private String currency; // Currency; USD, EUR
+    private String currency = "USD"; // Currency; USD, EUR
 
     private BigDecimal tickSize; // Tick Size,0.0001
 

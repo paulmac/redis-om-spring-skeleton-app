@@ -1,4 +1,4 @@
-package com.redis.om.skeleton;
+package com.redis.om.skeleton.configuration;
 
 // import com.google.gson.JsonDeserializationContext;
 // import com.google.gson.JsonDeserializer;

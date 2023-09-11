@@ -7,6 +7,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.ib.client.OrderType;
+import com.ib.client.Types;
 import com.redis.om.spring.annotations.Indexed;
 
 import lombok.Builder;
@@ -33,11 +35,11 @@ public class Alert {
     @NonNull
     private String symbol; // from TV ticker
     @NonNull
-    private String secType; // from TV "FX"
+    private Types.SecType secType; // IBKR "CFD"
     @NonNull
-    private String side; // from TV strategy.order.action
+    private Types.Action action; // from TV strategy.order.action
     @NonNull
-    private String orderType; // from TV "MIDPRICE" or "LMT"
+    private OrderType orderType; // from TV "MIDPRICE" or "LMT"
     @NonNull
     private String tif; // from TV "GTC"
 
@@ -63,35 +65,9 @@ public class Alert {
     @NonNull
     private String comment; // strategy.order.comment from Source (i.e TradingView)
 
-    // {
-    // "strategy": "Trendilo",
-    // "timeFrame": "M15",
-    // "direction": "FORWARD",
-    // "symbol": "{{ticker}}",
-    // "secType": "FX",
-    // "side": "{{strategy.order.action}}",
-    // "orderType": "MIDPRICE",
-    // "tif": "GTC",
-    // "quantity": "{{strategy.position_size}}",
-    // "timeStamp": "{{timenow}}",
-    // "orderId": "{{strategy.order.id}}",
-    // "price": "{{strategy.order.price}}",
-    // "close": "{{strategy.order.close}}",
-    // "open": "{{strategy.order.open}}",
-    // "high": "{{strategy.order.high}}",
-    // "low": "{{strategy.order.low}}",
-    // "time": "{{strategy.order.time}}",
-    // "narrative": "{{strategy.order.alert_message}}",
-    // "comment": "{{strategy.order.comment}}"
-    // }
-
     @CreatedDate
-    // @JsonDeserialize(using = InstantTypeAdapter.Deserializer.class)
-    // @JsonSerialize(using = InstantTypeAdapter.Serializer.class)
     private Instant createdDate;
 
     @LastModifiedDate
-    // @JsonDeserialize(using = InstantTypeAdapter.Deserializer.class)
-    // @JsonSerialize(using = InstantTypeAdapter.Serializer.class)
     private Instant lastModifiedDate;
 }

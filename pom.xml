@@ -2,22 +2,43 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.1.2</version>
+    <version>3.1.3</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
-  <groupId>com.redis.om</groupId>
-  <artifactId>skeleton</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+
   <name>skeleton</name>
+
+  <groupId>com.redis.om</groupId>
+  <artifactId>ibkr-algo-hub</artifactId>
+  <version>1.1.1</version>
+
   <description>Skeleton App for Redis OM Spring</description>
+
   <properties>
     <java.version>17</java.version>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
   </properties>
-  <dependencies>
+    <!--
+    You'll need the /lib/ibkrfacade.jar on your classpath. To install the IBKR Facade jar to the local .m2 repo manually run:
+    mvn install:install-file -Dfile=./ibkrfacade.jar -DgroupId=hu.auxin -DartifactId=ibkrfacade -Dversion=1.1 -Dpackaging=jar
+    -->
+
+    <dependencies>
+<!--
+      <dependency>
+      <groupId>hu.auxin</groupId>
+      <artifactId>ibkrfacade</artifactId>
+      <version>1.1</version>
+      <type>jar</type>
+    </dependency>
+-->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
@@ -25,14 +46,29 @@
     <dependency>
       <groupId>com.redis.om</groupId>
       <artifactId>redis-om-spring</artifactId>
-      <version>0.8.6</version>
+      <version>0.8.7</version>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-redis</artifactId>
+  </dependency>
+    <dependency>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+  </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
+<!--
       <scope>runtime</scope>
       <optional>true</optional>
+-->
     </dependency>
+    <dependency>
+      <groupId>com.ib</groupId>
+      <artifactId>TwsApi</artifactId>
+      <version>1.0</version>
+  </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -41,18 +77,12 @@
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-      <version>2.1.0</version>
+      <version>2.2.0</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.apache.directory.studio/org.apache.commons.io -->
-    <dependency>
-        <groupId>org.apache.directory.studio</groupId>
-        <artifactId>org.apache.commons.io</artifactId>
-        <version>2.4</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->
     <dependency>
@@ -60,30 +90,24 @@
         <artifactId>opencsv</artifactId>
         <version>5.7.1</version>
     </dependency>  </dependencies>
-  <repositories>
-    <repository>
-      <id>snapshots-repo</id>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-    </repository>
-  </repositories>
 
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven-compiler-plugin.version}</version>
+        <version>3.11.0</version>
         <configuration>
           <annotationProcessorPaths>
             <path>
               <groupId>org.springframework.boot</groupId>
               <artifactId>spring-boot-configuration-processor</artifactId>
-              <version>3.0.6</version>
+              <version>3.1.3</version>
             </path>
             <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
-              <version>${lombok.version}</version>
+              <version>1.18.28</version>
             </path>
             <path>
               <groupId>com.redis.om</groupId>

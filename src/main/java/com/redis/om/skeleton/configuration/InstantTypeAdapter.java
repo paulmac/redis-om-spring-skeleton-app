@@ -1,4 +1,4 @@
-package com.redis.om.skeleton;
+package com.redis.om.skeleton.configuration;
 
 import java.io.IOException;
 import java.time.Instant;

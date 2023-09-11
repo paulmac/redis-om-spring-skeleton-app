@@ -18,14 +18,14 @@ import lombok.NonNull;
 
 @Data
 @RestController
-@RequestMapping("/ibkrhub/signals/")
+@RequestMapping("/ibkrhub/alerts/")
 public class AlertsController {
 
     @NonNull
-    AlertsRepository repo;
+    private AlertsRepository repo;
 
     @NonNull
-    AlertService alertService;
+    private AlertService alertService;
 
     @GetMapping("all")
     Iterable<Alert> all() {

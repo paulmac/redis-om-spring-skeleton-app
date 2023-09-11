@@ -57,13 +57,13 @@ public class Strategy {
     private List<String> indicators = new ArrayList<>(); // parameters in Scenario
 
     @NonNull
-    public LinkedList<String> backs = new LinkedList<>();
+    public List<String> backs = new LinkedList<>();
 
     @NonNull
-    public LinkedList<String> forwards = new LinkedList<>();
+    public List<String> forwards = new LinkedList<>();
 
     @NonNull
-    public LinkedList<String> lives = new LinkedList<>();
+    public List<String> lives = new LinkedList<>();
 
     // audit fields
 

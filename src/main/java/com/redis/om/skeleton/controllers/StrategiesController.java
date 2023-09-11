@@ -33,19 +33,19 @@ public class StrategiesController {
 
     // @Autowired - NOT USED AS ctor init safer
     @NonNull
-    StrategiesRepository repo;
+    private StrategiesRepository repo;
 
     @NonNull
-    ScenariosRepository scenariosRepo;
+    private ScenariosRepository scenariosRepo;
 
     @NonNull
-    TradesRepository tradesRepo;
+    private TradesRepository tradesRepo;
 
     @NonNull
-    StrategiesService service;
+    private StrategiesService service;
 
     @NonNull
-    TradesService tradesService;
+    private TradesService tradesService;
 
     @GetMapping("{id}")
     Optional<Strategy> byId(@PathVariable String id) {
@@ -102,8 +102,7 @@ public class StrategiesController {
                     log.info("DELETE Strategy : " + s.toString());
                     service.deleteDirection(Scenario.Direction.ALL, s);
                     repo.delete(s);
-                },
-                () -> {
+                }, () -> {
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Strategy not found");
                 });
     }

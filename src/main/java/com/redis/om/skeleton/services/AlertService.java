@@ -2,7 +2,6 @@ package com.redis.om.skeleton.services;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.redis.om.skeleton.json.Alert;
@@ -13,16 +12,23 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Data
 @Service
-@Slf4j
+// @DependsOn("ContractManagerService")
 public class AlertService {
 
     @NonNull
-    TradesRepository repo;
+    private TradesRepository repo;
 
     @NonNull
-    ScenariosRepository scenariosRepo;
+    private ScenariosRepository scenariosRepo;
+
+    // @NonNull
+    // private OrderManagerService orderService;
+
+    // @NonNull
+    // private ContractManagerService contractService;
 
     public void post(Alert alert) {
 
@@ -30,25 +36,30 @@ public class AlertService {
                 alert.getTimeFrame(), alert.getDirection()).ifPresentOrElse(
                         s -> {
                             log.info("Found Scenario : " + alert.getStrategy());
-                            switch (s.current.state) {
-                                case OPEN:
-                                    if (StringUtils.startsWithIgnoreCase(alert.getDescription(), "Close")) {
-                                        s.current.setExitSignalPrice(alert.getPrice());
-                                        s.current.setExitDateTime(alert.getTimeStamp());
-                                    } else
-                                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Trade not OPEN");
-                                    break;
-                                case BLANK:
-                                    if (StringUtils.startsWithIgnoreCase(alert.getDescription(), "Open")) {
-                                        s.current.setEntrySignalPrice(alert.getPrice());
-                                        s.current.setEntryDateTime(alert.getTimeStamp());
-                                    } else
-                                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Trade not BLANK");
-                                    break;
-                                default:
-                                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Scenario not found");
-                            }
-                            repo.save(s.current);
+                            // Contract contract =
+                            // s.getConId()contractService.getContractHolder(s.getConId()).getContract();
+                            // switch (s.current.state) {
+                            // case OPEN:
+                            // if (StringUtils.startsWithIgnoreCase(alert.getDescription(), "Close")) {
+                            // s.current.setExitAlertPrice(alert.getPrice());
+                            // s.current.setExitAlertDateTime(alert.getTimeStamp());
+                            // orderService.placeMarketOrder(contract, alert.getAction(),
+                            // alert.getQuantity());
+                            // } else
+                            // throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Trade not OPEN");
+                            // break;
+                            // case BLANK:
+                            // if (StringUtils.startsWithIgnoreCase(alert.getDescription(), "Open")) {
+                            // s.current.setEntryAlertPrice(alert.getPrice());
+                            // s.current.setEntryAlertDateTime(alert.getTimeStamp());
+                            // } else
+                            // throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Trade not BLANK");
+                            // break;
+                            // default:
+                            // throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Scenario not
+                            // found");
+                            // }
+                            // repo.save(s.current);
                         }, () -> {
                             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Scenario not found");
                         });

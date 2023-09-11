@@ -1,4 +1,4 @@
-package com.redis.om.skeleton;
+package com.redis.om.skeleton.configuration;
 // import java.time.ZonedDateTime;
 
 // import java.time.format.DateTimeFormatter;
